@@ -3,17 +3,19 @@
 const text = document.querySelector('.text');
 const data = new Date();
 
-const monthA = [ 'Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота' ];
-
-const textDay = monthA[new Date().getDay()];
-
+const breakPointEvening = new Date(data.getFullYear(), data.getMonth(), data.getDate(), 18, 0, 0).getHours();
+const breakPointMorning = new Date(data.getFullYear(), data.getMonth(), data.getDate(), 5, 0, 0).getHours();
 let textDayTime;
+if (data.getHours() > breakPointEvening || data.getHours() < breakPointMorning) {
+    textDayTime = 'Вечер';
+} else {
+    textDayTime = 'День';
+}
 
-let nowTime = data.toString().slice(16, 24);
-data.getHours() >= 12 ? nowTime += ' PM' : nowTime += ' AM';
+const textDay = data.toLocaleString('ru', { weekday: 'long' });
 
-// eslint-disable-next-line no-constant-condition
-data.getHours() === 18, 19, 20, 21, 22, 23, 24, 0, 1, 2, 3, 4, 5 ? textDayTime = 'Вечер' : textDayTime = 'День';
+const nowTime = data.toLocaleTimeString('ru');
+
 
 const merryChristmasDay =  Math.ceil((new Date(`31 Dec 2020`).getTime() - data.getTime()) / 1000 / 60 / 60 / 24);
 
@@ -21,12 +23,21 @@ const declOfNum = (number, titles) => {
     const cases = [2, 0, 1, 1, 1, 2];
     return titles[ (number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5] ];
 };
-text.insertAdjacentHTML('afterbegin', `
-        <p>Добрый ${textDayTime}</p>
-        <p>Сегодня: ${textDay}</p>
-        <p>Текущее время: ${nowTime}</p>
-        <p>До нового года осталось ${merryChristmasDay} ${declOfNum(merryChristmasDay, ['день', 'дня', 'дней'])}</p>
-`);
+const day = declOfNum(merryChristmasDay, ['день', 'дня', 'дней']);
+
+const textDivP = document.createElement('p');
+textDivP.textContent = `Добрый ${textDayTime}`;
+
+const textDayP = document.createElement('p');
+textDayP.textContent = `Сегодня: ${textDay}`;
+
+const textNowTimeP = document.createElement('p');
+textNowTimeP.textContent = `Текущее время: ${nowTime}`;
+
+const textmerryChristmasDayP = document.createElement('p');
+textmerryChristmasDayP.textContent = `До нового года осталось ${merryChristmasDay} ${day}`;
+
+text.append(textDivP, textDayP, textNowTimeP, textmerryChristmasDayP);
 
 
 
