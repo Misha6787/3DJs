@@ -44,9 +44,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const toggleMenu =  () => {
         const   btnMenu = document.querySelector('.menu'),
-            menu = document.querySelector('menu'),
-            closeBtn = document.querySelector('.close-btn'),
-            menuItems = menu.querySelectorAll('ul>li');
+            menu = document.querySelector('menu');
 
         let count = 0;
         const handlerMenuCall = () => {
@@ -77,37 +75,52 @@ window.addEventListener('DOMContentLoaded', () => {
         const disabledAnim = () => {
             if (screen.width < 768) {
                 btnMenu.removeEventListener('click', handlerMenuCall);
-                closeBtn.removeEventListener('click', handlerMenuShow);
-                menuItems.forEach(item => item.removeEventListener('click', handlerMenuShow));
                 btnMenu.addEventListener('click', notAnimFunc);
-                closeBtn.addEventListener('click', notAnimFunc);
-                menuItems.forEach(item => item.addEventListener('click', notAnimFunc));
             } else {
                 btnMenu.removeEventListener('click', notAnimFunc);
-                closeBtn.removeEventListener('click', notAnimFunc);
-                menuItems.forEach(item => item.removeEventListener('click', notAnimFunc));
                 btnMenu.addEventListener('click', handlerMenuCall);
-                closeBtn.addEventListener('click', handlerMenuShow);
-                menuItems.forEach(item => item.addEventListener('click', handlerMenuShow));
             }
         };
         if (screen.width > 768) {
             btnMenu.addEventListener('click', handlerMenuCall);
-            closeBtn.addEventListener('click', handlerMenuShow);
-            menuItems.forEach(item => item.addEventListener('click', handlerMenuShow));
         } else {
             btnMenu.addEventListener('click', notAnimFunc);
-            closeBtn.addEventListener('click', notAnimFunc);
-            menuItems.forEach(item => item.addEventListener('click', notAnimFunc));
         }
         window.addEventListener('resize', disabledAnim);
+        window.addEventListener('click', event => {
+            if (menu.style.transform === `translate(100%)`) {
+                let target = event.target;
+                if (target.closest('ul>li>a')) {
+                    if (screen.width > 768) {
+                        handlerMenuShow();
+                    } else {
+                        notAnimFunc();
+                    }
+                }
+                if (target.classList.contains('close-btn')) {
+                    if (screen.width > 768) {
+                        handlerMenuShow();
+                    } else {
+                        notAnimFunc();
+                    }
+                } else {
+                    target = target.closest('menu');
+                    if (!target) {
+                        if (screen.width > 768) {
+                            handlerMenuShow();
+                        } else {
+                            notAnimFunc();
+                        }
+                    }
+                }
+            }
+        });
     };
     toggleMenu();
 
     const togglePopUp = () => {
         const   popup = document.querySelector('.popup'),
-            popupBtn = document.querySelectorAll('.popup-btn'),
-            popupClose = document.querySelector('.popup-close');
+            popupBtn = document.querySelectorAll('.popup-btn');
 
         let     count = 0;
 
@@ -142,24 +155,67 @@ window.addEventListener('DOMContentLoaded', () => {
         const disabledAnim = () => {
             if (screen.width < 768) {
                 popupBtn.forEach(item => item.removeEventListener('click', popupAnimCall));
-                popupClose.removeEventListener('click', popupAnimShow);
                 popupBtn.forEach(item => item.addEventListener('click', notAnimFunc));
-                popupClose.addEventListener('click', notAnimFunc);
             } else {
                 popupBtn.forEach(item => item.removeEventListener('click', notAnimFunc));
-                popupClose.removeEventListener('click', notAnimFunc);
                 popupBtn.forEach(item => item.addEventListener('click', popupAnimCall));
-                popupClose.addEventListener('click', popupAnimShow);
             }
         };
         if (screen.width > 768) {
             popupBtn.forEach(item => item.addEventListener('click', popupAnimCall));
-            popupClose.addEventListener('click', popupAnimShow);
         } else {
             popupBtn.forEach(item => item.addEventListener('click', notAnimFunc));
-            popupClose.addEventListener('click', notAnimFunc);
         }
         window.addEventListener('resize', disabledAnim);
+        popup.addEventListener('click', event => {
+            let target = event.target;
+            if (target.classList.contains('popup-close')) {
+                if (screen.width > 768) {
+                    popupAnimShow();
+                } else {
+                    notAnimFunc();
+                }
+            } else {
+                target = target.closest('.popup-content');
+                if (!target) {
+                    if (screen.width > 768) {
+                        popupAnimShow();
+                    } else {
+                        notAnimFunc();
+                    }
+                }
+            }
+        });
     };
     togglePopUp();
+
+    const tabs = () => {
+        const tabHeader = document.querySelector('.service-header'),
+            tab = tabHeader.querySelectorAll('.service-header-tab'),
+            tabContent = document.querySelectorAll('.service-tab');
+
+        const toggleTabContent = index => {
+            for (let i = 0; i < tabContent.length; i++) {
+                if (index === i) {
+                    tab[i].classList.add('active');
+                    tabContent[i].classList.remove('d-none');
+                } else {
+                    tab[i].classList.remove('active');
+                    tabContent[i].classList.add('d-none');
+                }
+            }
+        };
+        tabHeader.addEventListener('click', event => {
+            let target = event.target;
+            target = target.closest('.service-header-tab');
+            if (target.classList.contains('service-header-tab')) {
+                tab.forEach((item, i) => {
+                    if (item === target) {
+                        toggleTabContent(i);
+                    }
+                });
+            }
+        });
+    };
+    tabs();
 });
