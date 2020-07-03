@@ -43,9 +43,7 @@ window.addEventListener('DOMContentLoaded', () => {
     countTimer('04 July 2020');
 
     const toggleMenu =  () => {
-        const   btnMenu = document.querySelector('.menu'),
-            menu = document.querySelector('menu');
-
+        const menu = document.querySelector('menu');
         let count = 0;
         const handlerMenuCall = () => {
             const menuAnimCall = requestAnimationFrame(handlerMenuCall);
@@ -72,24 +70,19 @@ window.addEventListener('DOMContentLoaded', () => {
                 menu.style.transform = 'translate(-100%)';
             }
         };
-        const disabledAnim = () => {
-            if (screen.width < 768) {
-                btnMenu.removeEventListener('click', handlerMenuCall);
-                btnMenu.addEventListener('click', notAnimFunc);
-            } else {
-                btnMenu.removeEventListener('click', notAnimFunc);
-                btnMenu.addEventListener('click', handlerMenuCall);
-            }
-        };
-        if (screen.width > 768) {
-            btnMenu.addEventListener('click', handlerMenuCall);
-        } else {
-            btnMenu.addEventListener('click', notAnimFunc);
-        }
-        window.addEventListener('resize', disabledAnim);
         window.addEventListener('click', event => {
+            let target = event.target;
+            const timeStart = () => {
+                if (screen.width > 768) {
+                    handlerMenuCall();
+                } else {
+                    notAnimFunc();
+                }
+            };
+            if (target.closest('.menu')) {
+                setTimeout(timeStart, 0);
+            }
             if (menu.style.transform === `translate(100%)`) {
-                let target = event.target;
                 if (target.closest('ul>li>a')) {
                     if (screen.width > 768) {
                         handlerMenuShow();
@@ -119,11 +112,8 @@ window.addEventListener('DOMContentLoaded', () => {
     toggleMenu();
 
     const togglePopUp = () => {
-        const   popup = document.querySelector('.popup'),
-            popupBtn = document.querySelectorAll('.popup-btn');
-
-        let     count = 0;
-
+        const popup = document.querySelector('.popup');
+        let count = 0;
         const popupAnimCall = () => {
             const popupAnimC = requestAnimationFrame(popupAnimCall);
             if (count < 1) {
@@ -152,36 +142,33 @@ window.addEventListener('DOMContentLoaded', () => {
                 popup.style.display = '';
             }
         };
-        const disabledAnim = () => {
-            if (screen.width < 768) {
-                popupBtn.forEach(item => item.removeEventListener('click', popupAnimCall));
-                popupBtn.forEach(item => item.addEventListener('click', notAnimFunc));
-            } else {
-                popupBtn.forEach(item => item.removeEventListener('click', notAnimFunc));
-                popupBtn.forEach(item => item.addEventListener('click', popupAnimCall));
-            }
-        };
-        if (screen.width > 768) {
-            popupBtn.forEach(item => item.addEventListener('click', popupAnimCall));
-        } else {
-            popupBtn.forEach(item => item.addEventListener('click', notAnimFunc));
-        }
-        window.addEventListener('resize', disabledAnim);
-        popup.addEventListener('click', event => {
+        window.addEventListener('click', event => {
             let target = event.target;
-            if (target.classList.contains('popup-close')) {
+            const timeStart = () => {
                 if (screen.width > 768) {
-                    popupAnimShow();
+                    popupAnimCall();
                 } else {
                     notAnimFunc();
                 }
-            } else {
-                target = target.closest('.popup-content');
-                if (!target) {
+            };
+            if (target.closest('.popup-btn')) {
+                setTimeout(timeStart, 0);
+            }
+            if (popup.style.display === 'block') {
+                if (target.classList.contains('popup-close')) {
                     if (screen.width > 768) {
                         popupAnimShow();
                     } else {
                         notAnimFunc();
+                    }
+                } else {
+                    target = target.closest('.popup-content');
+                    if (!target) {
+                        if (screen.width > 768) {
+                            popupAnimShow();
+                        } else {
+                            notAnimFunc();
+                        }
                     }
                 }
             }
@@ -218,4 +205,83 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     };
     tabs();
+    const slider = () => {
+        const slide = document.querySelectorAll('.portfolio-item'),
+            slider = document.querySelector('.portfolio-content'),
+            portfolioDots = document.querySelector('.portfolio-dots');
+
+        slide.forEach(() => {
+            const dotItem = document.createElement('li');
+            dotItem.classList.add('dot');
+            portfolioDots.append(dotItem);
+        });
+
+        const dot = document.querySelectorAll('.dot');
+
+        let currentSlide = 0,
+            interval;
+        const prevSlide = (elem, index, strClass) => elem[index].classList.remove(strClass);
+        const nextSlide = (elem, index, strClass) => elem[index].classList.add(strClass);
+
+        const autoPlaySlide = () => {
+            prevSlide(slide, currentSlide, 'portfolio-item-active');
+            prevSlide(dot, currentSlide, 'dot-active');
+            currentSlide++;
+            if (currentSlide >= slide.length) {
+                currentSlide = 0;
+            }
+            nextSlide(slide, currentSlide, 'portfolio-item-active');
+            nextSlide(dot, currentSlide, 'dot-active');
+        };
+        const startSlide = (time = 3000) => {
+            interval = setInterval(autoPlaySlide, time);
+        };
+        const stopSlide = () => {
+            clearInterval(interval);
+        };
+        slider.addEventListener('click', event => {
+            event.preventDefault();
+            const target = event.target;
+            if (!target.matches('.portfolio-btn, .dot')) {
+                return;
+            }
+            prevSlide(slide, currentSlide, 'portfolio-item-active');
+            prevSlide(dot, currentSlide, 'dot-active');
+
+            if (target.matches('#arrow-right')) {
+                currentSlide++;
+            } else if (target.matches('#arrow-left')) {
+                currentSlide--;
+            } else if (target.matches('.dot')) {
+                dot.forEach((elem, index) => {
+                    if (elem === target) {
+                        currentSlide = index;
+                    }
+                });
+            }
+            if (currentSlide >= slide.length) {
+                currentSlide = 0;
+            }
+            if (currentSlide < 0) {
+                currentSlide = slide.length - 1;
+            }
+            nextSlide(slide, currentSlide, 'portfolio-item-active');
+            nextSlide(dot, currentSlide, 'dot-active');
+        });
+
+        slider.addEventListener('mouseover', event => {
+            if (event.target.matches('.portfolio-btn') ||
+            event.target.matches('.dot')) {
+                stopSlide();
+            }
+        });
+        slider.addEventListener('mouseout', event => {
+            if (event.target.matches('.portfolio-btn') ||
+            event.target.matches('.dot')) {
+                startSlide();
+            }
+        });
+        startSlide(1500);
+    };
+    slider();
 });
