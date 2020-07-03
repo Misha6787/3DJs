@@ -74,6 +74,23 @@ window.addEventListener('DOMContentLoaded', () => {
                 menu.style.transform = 'translate(-100%)';
             }
         };
+        const disabledAnim = () => {
+            if (screen.width < 768) {
+                btnMenu.removeEventListener('click', handlerMenuCall);
+                closeBtn.removeEventListener('click', handlerMenuShow);
+                menuItems.forEach(item => item.removeEventListener('click', handlerMenuShow));
+                btnMenu.addEventListener('click', notAnimFunc);
+                closeBtn.addEventListener('click', notAnimFunc);
+                menuItems.forEach(item => item.addEventListener('click', notAnimFunc));
+            } else {
+                btnMenu.removeEventListener('click', notAnimFunc);
+                closeBtn.removeEventListener('click', notAnimFunc);
+                menuItems.forEach(item => item.removeEventListener('click', notAnimFunc));
+                btnMenu.addEventListener('click', handlerMenuCall);
+                closeBtn.addEventListener('click', handlerMenuShow);
+                menuItems.forEach(item => item.addEventListener('click', handlerMenuShow));
+            }
+        };
         if (screen.width > 768) {
             btnMenu.addEventListener('click', handlerMenuCall);
             closeBtn.addEventListener('click', handlerMenuShow);
@@ -83,6 +100,7 @@ window.addEventListener('DOMContentLoaded', () => {
             closeBtn.addEventListener('click', notAnimFunc);
             menuItems.forEach(item => item.addEventListener('click', notAnimFunc));
         }
+        window.addEventListener('resize', disabledAnim);
     };
     toggleMenu();
 
@@ -114,10 +132,24 @@ window.addEventListener('DOMContentLoaded', () => {
             count -= 0.1;
         };
         const notAnimFunc = () => {
-            if (popup.style.display === '') {
+            if (popup.style.display === '' || popup.style.display === 'none') {
                 popup.style.display = 'block';
+                popup.style.opacity = '1';
             } else if (popup.style.display === 'block') {
                 popup.style.display = '';
+            }
+        };
+        const disabledAnim = () => {
+            if (screen.width < 768) {
+                popupBtn.forEach(item => item.removeEventListener('click', popupAnimCall));
+                popupClose.removeEventListener('click', popupAnimShow);
+                popupBtn.forEach(item => item.addEventListener('click', notAnimFunc));
+                popupClose.addEventListener('click', notAnimFunc);
+            } else {
+                popupBtn.forEach(item => item.removeEventListener('click', notAnimFunc));
+                popupClose.removeEventListener('click', notAnimFunc);
+                popupBtn.forEach(item => item.addEventListener('click', popupAnimCall));
+                popupClose.addEventListener('click', popupAnimShow);
             }
         };
         if (screen.width > 768) {
@@ -127,6 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
             popupBtn.forEach(item => item.addEventListener('click', notAnimFunc));
             popupClose.addEventListener('click', notAnimFunc);
         }
+        window.addEventListener('resize', disabledAnim);
     };
     togglePopUp();
 });
