@@ -5,7 +5,7 @@ const data = new Date();
 
 const textDayTime = () => {
     const hours = data.getHours();
-    if (hours > 18 || hours < 5) {
+    if (hours >= 18 || hours <= 5) {
         return 'Вечер';
     } else {
         return 'День';
