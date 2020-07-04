@@ -1,7 +1,11 @@
 /* eslint-disable strict */
 window.addEventListener('DOMContentLoaded', () => {
     'use strict';
-
+    const screenWidth = () => Math.max(
+        document.body.scrollWidth, document.documentElement.scrollWidth,
+        document.body.offsetWidth, document.documentElement.offsetWidth,
+        document.body.clientWidth, document.documentElement.clientWidth
+    );
     const countTimer = deadline => {
         const   timerHours = document.querySelector('#timer-hours'),
             timerMinutes = document.querySelector('#timer-minutes'),
@@ -75,7 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         };
         const disabledAnim = () => {
-            if (screen.width < 768) {
+            if (screenWidth() < 768) {
                 btnMenu.removeEventListener('click', handlerMenuCall);
                 closeBtn.removeEventListener('click', handlerMenuShow);
                 menuItems.forEach(item => item.removeEventListener('click', handlerMenuShow));
@@ -91,7 +95,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 menuItems.forEach(item => item.addEventListener('click', handlerMenuShow));
             }
         };
-        if (screen.width > 768) {
+        if (screenWidth() > 768) {
             btnMenu.addEventListener('click', handlerMenuCall);
             closeBtn.addEventListener('click', handlerMenuShow);
             menuItems.forEach(item => item.addEventListener('click', handlerMenuShow));
@@ -140,7 +144,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         };
         const disabledAnim = () => {
-            if (screen.width < 768) {
+            if (screenWidth() < 768) {
                 popupBtn.forEach(item => item.removeEventListener('click', popupAnimCall));
                 popupClose.removeEventListener('click', popupAnimShow);
                 popupBtn.forEach(item => item.addEventListener('click', notAnimFunc));
@@ -152,7 +156,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 popupClose.addEventListener('click', popupAnimShow);
             }
         };
-        if (screen.width > 768) {
+        if (screenWidth() > 768) {
             popupBtn.forEach(item => item.addEventListener('click', popupAnimCall));
             popupClose.addEventListener('click', popupAnimShow);
         } else {
