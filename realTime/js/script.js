@@ -3,14 +3,14 @@
 const text = document.querySelector('.text');
 const data = new Date();
 
-const breakPointEvening = new Date(data.getFullYear(), data.getMonth(), data.getDate(), 18, 0, 0).getHours();
-const breakPointMorning = new Date(data.getFullYear(), data.getMonth(), data.getDate(), 5, 0, 0).getHours();
-let textDayTime;
-if (data.getHours() > breakPointEvening || data.getHours() < breakPointMorning) {
-    textDayTime = 'Вечер';
-} else {
-    textDayTime = 'День';
-}
+const textDayTime = () => {
+    const hours = data.getHours();
+    if (hours > 18 || hours < 5) {
+        return 'Вечер';
+    } else {
+        return 'День';
+    }
+};
 
 const textDay = data.toLocaleString('ru', { weekday: 'long' });
 
@@ -26,7 +26,7 @@ const declOfNum = (number, titles) => {
 const day = declOfNum(merryChristmasDay, ['день', 'дня', 'дней']);
 
 const textDivP = document.createElement('p');
-textDivP.textContent = `Добрый ${textDayTime}`;
+textDivP.textContent = `Добрый ${textDayTime()}`;
 
 const textDayP = document.createElement('p');
 textDayP.textContent = `Сегодня: ${textDay}`;
