@@ -176,6 +176,29 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     togglePopUp();
 
+    const scrooToService = () => {
+        event.preventDefault();
+        const buttonScrool = document.querySelector('[href="#service-block"]');
+        let count = 0;
+        const scroolinterval = () => {
+            const scroolPoint = document.documentElement.scrollTop;
+            count += scroolPoint;
+            const animScrooToService = () => {
+                const animScrool = requestAnimationFrame(animScrooToService);
+                if (count < 918) {
+                    document.documentElement.scrollTop = `${count}`;
+                    count += 27;
+                } else {
+                    cancelAnimationFrame(animScrool);
+                    count = 0;
+                }
+            };
+            animScrooToService();
+        };
+        buttonScrool.addEventListener('click', scroolinterval);
+    };
+    scrooToService();
+
     const tabs = () => {
         const tabHeader = document.querySelector('.service-header'),
             tab = tabHeader.querySelectorAll('.service-header-tab'),
@@ -284,4 +307,30 @@ window.addEventListener('DOMContentLoaded', () => {
         startSlide(1500);
     };
     slider();
+    const validCostInput = () => {
+        const input = document.querySelectorAll('input.calc-item');
+        const validInput = item => item.value = item.value.replace(/\D/g, '');
+        input.forEach(item => item.addEventListener('input', () => validInput(item)));
+    };
+    validCostInput();
+    const hoverImg = () => {
+        const command = document.querySelector('#command');
+        let srcImg;
+        const mouseoverElem = event => {
+            const target = event.target;
+            if (target.classList.contains('command__photo')) {
+                srcImg = target.src;
+                target.src = target.dataset.img;
+            }
+        };
+        const mouseoutElem = event => {
+            const target = event.target;
+            if (target.classList.contains('command__photo')) {
+                target.src = srcImg;
+            }
+        };
+        command.addEventListener('mouseover', mouseoverElem);
+        command.addEventListener('mouseout', mouseoutElem);
+    };
+    hoverImg();
 });
