@@ -1,7 +1,7 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable strict */
 window.addEventListener('DOMContentLoaded', () => {
     'use strict';
-
     const countTimer = deadline => {
         const   timerHours = document.querySelector('#timer-hours'),
             timerMinutes = document.querySelector('#timer-minutes'),
@@ -380,4 +380,72 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     };
     calc();
+    const sendForm = () => {
+        const errorMessage = 'Что то пошло не так...',
+            loadMessage = document.createElement('div'),
+            successMessage = 'Спасибо мы скоро с вами свяжемся';
+        loadMessage.id = 'hellopreloader_preload';
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200) {
+                    outputData();
+                } else {
+                    errorData(request.status);
+                }
+            });
+            request.open('POST', 'server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(JSON.stringify(body));
+        };
+
+        const statusMessage = document.createElement('div');
+        statusMessage.style.cssText = 'font-size: 2rem; color: white; margin-top: 10px; margin-bottom: 10px';
+
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            [...form.elements].forEach(item => {
+                item.addEventListener('keyup', () => {
+                    if (item.getAttribute('name') === 'user_phone') {
+                        item.value = item.value.replace(/\D/g, '');
+                    } else if (item.getAttribute('name') === 'user_name') {
+                        item.value = item.value.replace(/(^[a-zA-z0-9]{1,}$)/, '');
+                    } else if (item.getAttribute('name') === 'user_message') {
+                        item.value = item.value.replace(/(^[a-zA-z]{1,}$)/, '');
+                    }
+                });
+            });
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                statusMessage.textContent = '';
+                [...form.elements].forEach(item => {
+                    if (item.tagName.toLowerCase() === 'input') {
+                        item.value = '';
+                    }
+                });
+                form.appendChild(statusMessage);
+                statusMessage.appendChild(loadMessage);
+                const body = {};
+                const formData = new FormData(form);
+                formData.forEach((val, key) => {
+                    body[key] = val;
+                });
+                postData(
+                    body,
+                    () => {
+                        loadMessage.remove();
+                        statusMessage.textContent = successMessage;
+                    },
+                    error => {
+                        statusMessage.textContent = errorMessage;
+                        console.error(error);
+                    }
+                );
+            });
+        });
+    };
+    sendForm();
 });

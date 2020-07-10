@@ -15,6 +15,18 @@
 	<link rel="mask-icon" href="./images/favicon/safari-pinned-tab.svg" color="#5bbad5">
 	<meta name="msapplication-TileColor" content="#b91d47">
 	<meta name="theme-color" content="#ffffff">
+	<style>
+		#hellopreloader_preload {
+			display: block;
+			position: relative;
+			z-index: 99999;
+			width: 30px;
+			height: 30px;
+			margin: auto;
+			background: url(http://hello-site.ru//main/images/preloads/tail-spin.svg) center center no-repeat;
+			background-size: 22px;
+		}
+	</style>
 </head>
 
 <body>
@@ -411,79 +423,19 @@
 		</div>
 	</div>
 </div>
-<script src="/js/script.js"></script>
-<script src="/plugins/validator/jsvalidator.js"></script>
+<script src="js/script.js"></script>
 <script>
-	const valid = new Validator({
-	  	selector: '#form1',
-		pattern: {
-			name: /(^[а-яА-Я]{1,}$)/,
-	  	},
-	  	method: {
-			'form1-name': [
-				['notEmpty'],
-				['pattern', 'name']
-			],
-			'form1-email': [
-				['notEmpty'],
-				['pattern', 'mail']
-			],
-			'form1-phone': [
-				['notEmpty'],
-				['pattern', 'phone']
-			]
-	  	}
-	})
-	valid.init();
-	valid.applyStyle();
-	const valid2 = new Validator({
-	  	selector: '#form2',
-		pattern: {
-			name: /(^[а-яА-Я]{1,}$)/,
-	  	},
-	  	method: {
-			'form2-name': [
-				['notEmpty'],
-				['pattern', 'name']
-			],
-			'form2-email': [
-				['notEmpty'],
-				['pattern', 'mail']
-			],
-			'form2-phone': [
-				['notEmpty'],
-				['pattern', 'phone']
-			],
-			'form2-message': [
-				['notEmpty'],
-				['pattern', 'name']
-			]
-	  	}
-	})
-	valid2.init();
-	valid2.applyStyle();
-	const valid3 = new Validator({
-	  	selector: '#form3',
-		pattern: {
-			name: /(^[а-яА-Я]{1,}$)/,
-	  	},
-	  	method: {
-			'form3-name': [
-				['notEmpty'],
-				['pattern', 'name']
-			],
-			'form3-email': [
-				['notEmpty'],
-				['pattern', 'mail']
-			],
-			'form3-phone': [
-				['notEmpty'],
-				['pattern', 'phone']
-			]
-	  	}
-	})
-	valid3.init();
-	valid3.applyStyle();
-  </script>
+const hellopreloader = document.getElementById("hellopreloader_preload");
+const fadeOutnojquery = el => {
+	el.style.opacity = 1;
+	const interhellopreloader = setInterval(function() {
+    	el.style.opacity = el.style.opacity - 0.05;
+    	if (el.style.opacity <= 0.05) {
+        clearInterval(interhellopreloader);
+        hellopreloader.style.display = "none";
+    	}
+	}, 16);
+}
+</script>
 </body>
 </html>
