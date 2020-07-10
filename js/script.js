@@ -2,6 +2,11 @@
 /* eslint-disable strict */
 window.addEventListener('DOMContentLoaded', () => {
     'use strict';
+    const screenWidth = () => Math.max(
+        document.body.scrollWidth, document.documentElement.scrollWidth,
+        document.body.offsetWidth, document.documentElement.offsetWidth,
+        document.body.clientWidth, document.documentElement.clientWidth
+    );
     const countTimer = deadline => {
         const   timerHours = document.querySelector('#timer-hours'),
             timerMinutes = document.querySelector('#timer-minutes'),
@@ -41,7 +46,6 @@ window.addEventListener('DOMContentLoaded', () => {
         const interval = setInterval(updateClock, 1000);
     };
     countTimer('04 July 2020');
-
     const toggleMenu =  () => {
         const menu = document.querySelector('menu');
         let count = 0;
@@ -73,7 +77,7 @@ window.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('click', event => {
             let target = event.target;
             const timeStart = () => {
-                if (screen.width > 768) {
+                if (screenWidth() > 768) {
                     handlerMenuCall();
                 } else {
                     notAnimFunc();
@@ -84,14 +88,14 @@ window.addEventListener('DOMContentLoaded', () => {
             }
             if (menu.style.transform === `translate(100%)`) {
                 if (target.closest('ul>li>a')) {
-                    if (screen.width > 768) {
+                    if (screenWidth() > 768) {
                         handlerMenuShow();
                     } else {
                         notAnimFunc();
                     }
                 }
                 if (target.classList.contains('close-btn')) {
-                    if (screen.width > 768) {
+                    if (screenWidth() > 768) {
                         handlerMenuShow();
                     } else {
                         notAnimFunc();
@@ -99,7 +103,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 } else {
                     target = target.closest('menu');
                     if (!target) {
-                        if (screen.width > 768) {
+                        if (screenWidth() > 768) {
                             handlerMenuShow();
                         } else {
                             notAnimFunc();
@@ -110,7 +114,6 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     };
     toggleMenu();
-
     const togglePopUp = () => {
         const popup = document.querySelector('.popup');
         let count = 0;
@@ -145,7 +148,7 @@ window.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('click', event => {
             let target = event.target;
             const timeStart = () => {
-                if (screen.width > 768) {
+                if (screenWidth() > 768) {
                     popupAnimCall();
                 } else {
                     notAnimFunc();
@@ -156,7 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
             if (popup.style.display === 'block') {
                 if (target.classList.contains('popup-close')) {
-                    if (screen.width > 768) {
+                    if (screenWidth() > 768) {
                         popupAnimShow();
                     } else {
                         notAnimFunc();
@@ -164,7 +167,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 } else {
                     target = target.closest('.popup-content');
                     if (!target) {
-                        if (screen.width > 768) {
+                        if (screenWidth() > 768) {
                             popupAnimShow();
                         } else {
                             notAnimFunc();
@@ -175,7 +178,6 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     };
     togglePopUp();
-
     const scrooToService = () => {
         event.preventDefault();
         const buttonScrool = document.querySelector('[href="#service-block"]');
@@ -198,7 +200,6 @@ window.addEventListener('DOMContentLoaded', () => {
         buttonScrool.addEventListener('click', scroolinterval);
     };
     scrooToService();
-
     const tabs = () => {
         const tabHeader = document.querySelector('.service-header'),
             tab = tabHeader.querySelectorAll('.service-header-tab'),
@@ -421,11 +422,6 @@ window.addEventListener('DOMContentLoaded', () => {
             form.addEventListener('submit', event => {
                 event.preventDefault();
                 statusMessage.textContent = '';
-                [...form.elements].forEach(item => {
-                    if (item.tagName.toLowerCase() === 'input') {
-                        item.value = '';
-                    }
-                });
                 form.appendChild(statusMessage);
                 statusMessage.appendChild(loadMessage);
                 const body = {};
@@ -444,6 +440,11 @@ window.addEventListener('DOMContentLoaded', () => {
                         console.error(error);
                     }
                 );
+                [...form.elements].forEach(item => {
+                    if (item.tagName.toLowerCase() === 'input') {
+                        item.value = '';
+                    }
+                });
             });
         });
     };
