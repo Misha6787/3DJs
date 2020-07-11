@@ -418,34 +418,35 @@ window.addEventListener('DOMContentLoaded', () => {
                 const item = target;
                 item.value = item.value.replace(/(^[a-zA-z]{1,}$)/, '');
             }
+        });
+        window.addEventListener('submit', event => {
+            event.preventDefault();
+            const target = event.target;
             if (target.closest('form')) {
-                const form = event.target.closest('form');
-                form.addEventListener('submit', e => {
-                    e.preventDefault();
-                    statusMessage.textContent = '';
-                    form.appendChild(statusMessage);
-                    statusMessage.appendChild(loadMessage);
-                    const body = {};
-                    const formData = new FormData(form);
-                    formData.forEach((val, key) => {
-                        body[key] = val;
-                    });
-                    postData(
-                        body,
-                        () => {
-                            loadMessage.remove();
-                            statusMessage.textContent = successMessage;
-                        },
-                        error => {
-                            statusMessage.textContent = errorMessage;
-                            console.error(error);
-                        }
-                    );
-                    [...form.elements].forEach(item => {
-                        if (item.tagName.toLowerCase() === 'input') {
-                            item.value = '';
-                        }
-                    });
+                const form = target.closest('form');
+                statusMessage.textContent = '';
+                form.appendChild(statusMessage);
+                statusMessage.appendChild(loadMessage);
+                const body = {};
+                const formData = new FormData(form);
+                formData.forEach((val, key) => {
+                    body[key] = val;
+                });
+                postData(
+                    body,
+                    () => {
+                        loadMessage.remove();
+                        statusMessage.textContent = successMessage;
+                    },
+                    error => {
+                        statusMessage.textContent = errorMessage;
+                        console.error(error);
+                    }
+                );
+                [...form.elements].forEach(item => {
+                    if (item.tagName.toLowerCase() === 'input') {
+                        item.value = '';
+                    }
                 });
             }
         });
