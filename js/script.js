@@ -407,7 +407,6 @@ window.addEventListener('DOMContentLoaded', () => {
         statusMessage.style.cssText = 'font-size: 2rem; color: white; margin-top: 10px; margin-bottom: 10px';
 
         window.addEventListener('keyup', event => {
-            const form = event.target.closest('form');
             const target = event.target;
             if (target.getAttribute('name') === 'user_phone') {
                 const item = target;
@@ -419,33 +418,36 @@ window.addEventListener('DOMContentLoaded', () => {
                 const item = target;
                 item.value = item.value.replace(/(^[a-zA-z]{1,}$)/, '');
             }
-            form.addEventListener('submit', event => {
-                event.preventDefault();
-                statusMessage.textContent = '';
-                form.appendChild(statusMessage);
-                statusMessage.appendChild(loadMessage);
-                const body = {};
-                const formData = new FormData(form);
-                formData.forEach((val, key) => {
-                    body[key] = val;
+            if (target.closest('form')) {
+                const form = event.target.closest('form');
+                form.addEventListener('submit', e => {
+                    e.preventDefault();
+                    statusMessage.textContent = '';
+                    form.appendChild(statusMessage);
+                    statusMessage.appendChild(loadMessage);
+                    const body = {};
+                    const formData = new FormData(form);
+                    formData.forEach((val, key) => {
+                        body[key] = val;
+                    });
+                    postData(
+                        body,
+                        () => {
+                            loadMessage.remove();
+                            statusMessage.textContent = successMessage;
+                        },
+                        error => {
+                            statusMessage.textContent = errorMessage;
+                            console.error(error);
+                        }
+                    );
+                    [...form.elements].forEach(item => {
+                        if (item.tagName.toLowerCase() === 'input') {
+                            item.value = '';
+                        }
+                    });
                 });
-                postData(
-                    body,
-                    () => {
-                        loadMessage.remove();
-                        statusMessage.textContent = successMessage;
-                    },
-                    error => {
-                        statusMessage.textContent = errorMessage;
-                        console.error(error);
-                    }
-                );
-                [...form.elements].forEach(item => {
-                    if (item.tagName.toLowerCase() === 'input') {
-                        item.value = '';
-                    }
-                });
-            });
+            }
         });
     };
     sendForm();
