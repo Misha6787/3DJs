@@ -406,19 +406,19 @@ window.addEventListener('DOMContentLoaded', () => {
         const statusMessage = document.createElement('div');
         statusMessage.style.cssText = 'font-size: 2rem; color: white; margin-top: 10px; margin-bottom: 10px';
 
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-            [...form.elements].forEach(item => {
-                item.addEventListener('keyup', () => {
-                    if (item.getAttribute('name') === 'user_phone') {
-                        item.value = item.value.replace(/\D/g, '');
-                    } else if (item.getAttribute('name') === 'user_name') {
-                        item.value = item.value.replace(/(^[a-zA-z0-9]{1,}$)/, '');
-                    } else if (item.getAttribute('name') === 'user_message') {
-                        item.value = item.value.replace(/(^[a-zA-z]{1,}$)/, '');
-                    }
-                });
-            });
+        window.addEventListener('keyup', event => {
+            const form = event.target.closest('form');
+            const target = event.target;
+            if (target.getAttribute('name') === 'user_phone') {
+                const item = target;
+                item.value = item.value.replace(/\D/g, '');
+            } else if (target.getAttribute('name') === 'user_name') {
+                const item = target;
+                item.value = item.value.replace(/(^[a-zA-z0-9]{1,}$)/, '');
+            } else if (target.getAttribute('name') === 'user_message') {
+                const item = target;
+                item.value = item.value.replace(/(^[a-zA-z]{1,}$)/, '');
+            }
             form.addEventListener('submit', event => {
                 event.preventDefault();
                 statusMessage.textContent = '';
