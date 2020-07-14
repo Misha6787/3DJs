@@ -386,27 +386,20 @@ window.addEventListener('DOMContentLoaded', () => {
             loadMessage = document.createElement('div'),
             successMessage = 'Спасибо мы скоро с вами свяжемся';
         loadMessage.id = 'hellopreloader_preload';
-        const postData = body => new Promise((resolve, reject) => {
-            const request = new XMLHttpRequest();
-            request.addEventListener('readystatechange', () => {
-                if (request.readyState !== 4) {
-                    return;
-                }
-                if (request.status === 200) {
-                    resolve();
-                } else {
-                    reject(request.status);
-                }
+        const postData = body  =>
+            fetch('server.php', {
+                method: 'POST',
+                cache: 'default',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body),
             });
-            request.open('POST', 'server.php');
-            request.setRequestHeader('Content-Type', 'application/json');
-            request.send(JSON.stringify(body));
-        });
 
         const statusMessage = document.createElement('div');
         statusMessage.style.cssText = 'font-size: 2rem; color: white; margin-top: 10px; margin-bottom: 10px';
 
-        window.addEventListener('keyup', event => {
+        document.body.addEventListener('keyup', event => {
             const target = event.target;
             if (target.getAttribute('name') === 'user_phone') {
                 const item = target;
@@ -419,7 +412,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 item.value = item.value.replace(/(^[a-zA-z]{1,}$)/, '');
             }
         });
-        window.addEventListener('submit', event => {
+        document.body.addEventListener('submit', event => {
             event.preventDefault();
             const target = event.target;
             if (target.closest('form')) {
@@ -433,13 +426,15 @@ window.addEventListener('DOMContentLoaded', () => {
                     body[key] = val;
                 });
                 postData(body)
-                    .then(() => {
+                    .then(response => {
                         loadMessage.remove();
+                        if (response.status !== 200) {
+                            throw new Error('status networn not 200');
+                        }
                         statusMessage.textContent = successMessage;
                     })
-                    .catch(error => {
+                    .catch(() => {
                         statusMessage.textContent = errorMessage;
-                        console.error(error);
                     });
                 [...form.elements].forEach(item => {
                     if (item.tagName.toLowerCase() === 'input') {
