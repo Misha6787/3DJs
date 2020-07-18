@@ -6,18 +6,22 @@ const calc = (price = 100) => {
         calcSquare = document.querySelector('.calc-square'),
         calcCount = document.querySelector('.calc-count'),
         calcDay = document.querySelector('.calc-day');
-    function scroll(val, el, timeout, step) {
+
+    let scrollIns;
+    const scroll = (val, el, step) => {
         let i = 0;
-        (function scrollIns() {
+        scrollIns = () => {
+            const animCount = requestAnimationFrame(scrollIns);
             if (i <= val) {
-                setTimeout(scrollIns, timeout);
                 document.getElementById(el).textContent = i;
                 i += step;
             } else {
+                cancelAnimationFrame(animCount);
                 document.getElementById(el).textContent = val;
             }
-        })();
-    }
+        };
+        scrollIns();
+    };
     const countSum = () => {
         let total = 0,
             countValue = 1,
@@ -36,7 +40,8 @@ const calc = (price = 100) => {
         }
         if (typeValue && squareValue) {
             total = Math.round(price * typeValue * squareValue * countValue * dayValue);
-            scroll(total, 'total', 5, 60);
+            scrollIns = 0;
+            scroll(total, 'total', 60);
         }
     };
     calcBlock.addEventListener('change', event => {

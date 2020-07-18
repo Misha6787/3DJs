@@ -25,6 +25,9 @@ const togglePopUp = () => {
         } else {
             cancelAnimationFrame(popupAnimS);
             popup.style.display = 'none';
+            if (popup.querySelector('.form-btn').nextElementSibling) {
+                popup.querySelector('.form-btn').nextElementSibling.textContent = '';
+            }
         }
         count -= 0.1;
     };
@@ -34,6 +37,9 @@ const togglePopUp = () => {
             popup.style.opacity = '1';
         } else if (popup.style.display === 'block') {
             popup.style.display = '';
+            if (popup.querySelector('.form-btn').nextElementSibling) {
+                popup.querySelector('.form-btn').nextElementSibling.textContent = '';
+            }
         }
     };
     window.addEventListener('click', event => {
