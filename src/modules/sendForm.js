@@ -105,19 +105,22 @@ const sendForm = () => {
                         throw new Error('status networn not 200');
                     }
                     statusMessage.textContent = successMessage;
+                    setTimeout(() => {
+                        statusMessage.textContent = '';
+                    }, 3000);
                 })
                 .catch(() => {
                     loadMessage.remove();
                     statusMessage.textContent = errorMessage;
+                    setTimeout(() => {
+                        statusMessage.textContent = '';
+                    }, 3000);
                 });
             [...form.elements].forEach(item => {
                 if (item.tagName.toLowerCase() === 'input') {
                     item.value = '';
                 }
             });
-            setTimeout(() => {
-                statusMessage.textContent = '';
-            }, 3000);
         }
     });
 };
