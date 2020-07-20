@@ -1,6 +1,11 @@
 /* eslint-disable strict */
 'use strict';
 const scrooToService = () => {
+    const screenWidth = () => Math.max(
+        document.body.scrollWidth, document.documentElement.scrollWidth,
+        document.body.offsetWidth, document.documentElement.offsetWidth,
+        document.body.clientWidth, document.documentElement.clientWidth
+    );
     const buttonScrool = document.querySelector('[href="#service-block"]');
     const menu = document.querySelector('menu');
     let count = 0;
@@ -10,16 +15,54 @@ const scrooToService = () => {
         const scroolPoint = document.documentElement.scrollTop;
         count += scroolPoint;
         let distanceToBlock;
-        if (target.closest('[href="#service-block"]')) {
-            distanceToBlock = 890;
-        } else if (target.closest('[href="#portfolio"]')) {
-            distanceToBlock = 1460;
-        } else if (target.closest('[href="#calc"]')) {
-            distanceToBlock = 2440;
-        } else if (target.closest('[href="#command"]')) {
-            distanceToBlock = 3520;
-        } else if (target.closest('[href="#connect"]')) {
-            distanceToBlock = 4580;
+        if (screenWidth() <= 430) {
+            if (target.closest('[href="#service-block"]')) {
+                distanceToBlock = 800;
+            } else if (target.closest('[href="#portfolio"]')) {
+                distanceToBlock = 1300;
+            } else if (target.closest('[href="#calc"]')) {
+                distanceToBlock = 1740;
+            } else if (target.closest('[href="#command"]')) {
+                distanceToBlock = 3470;
+            } else if (target.closest('[href="#connect"]')) {
+                distanceToBlock = 6168;
+            }
+        } else if (screenWidth() <= 768) {
+            if (target.closest('[href="#service-block"]')) {
+                distanceToBlock = 900;
+            } else if (target.closest('[href="#portfolio"]')) {
+                distanceToBlock = 1460;
+            } else if (target.closest('[href="#calc"]')) {
+                distanceToBlock = 2230;
+            } else if (target.closest('[href="#command"]')) {
+                distanceToBlock = 3388;
+            } else if (target.closest('[href="#connect"]')) {
+                distanceToBlock = 4258;
+            }
+        } else if (screenWidth() <= 1024) {
+            if (target.closest('[href="#service-block"]')) {
+                distanceToBlock = 890;
+            } else if (target.closest('[href="#portfolio"]')) {
+                distanceToBlock = 1368;
+            } else if (target.closest('[href="#calc"]')) {
+                distanceToBlock = 2220;
+            } else if (target.closest('[href="#command"]')) {
+                distanceToBlock = 3270;
+            } else if (target.closest('[href="#connect"]')) {
+                distanceToBlock = 4580;
+            }
+        } else if (screenWidth() > 1024) {
+            if (target.closest('[href="#service-block"]')) {
+                distanceToBlock = 890;
+            } else if (target.closest('[href="#portfolio"]')) {
+                distanceToBlock = 1460;
+            } else if (target.closest('[href="#calc"]')) {
+                distanceToBlock = 2440;
+            } else if (target.closest('[href="#command"]')) {
+                distanceToBlock = 3520;
+            } else if (target.closest('[href="#connect"]')) {
+                distanceToBlock = 4580;
+            }
         }
         const animScrooToService = () => {
             const animScrool = requestAnimationFrame(animScrooToService);
